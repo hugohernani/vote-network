@@ -18,25 +18,62 @@
 
 namespace ufal.voting.network
 
-participant SampleParticipant identified by participantId {
-  o String participantId
+enum ElectionStatus {
+  o CREATED
+  o STARTED
+  o FINISHED
+}
+
+
+participant Manager identified by manager_id {
+  o String manager_id
   o String firstName
   o String lastName
 }
 
-asset SampleAsset identified by assetId {
-  o String assetId
-  --> SampleParticipant owner
-  o String value
+participant ElectionManager extends Manager {
+  --> Election[] elections
 }
 
-transaction SampleTransaction {
-  --> SampleAsset asset
-  o String newValue
+participant Voter identified by enrollment_id {
+  o String enrollment_id
+  o Boolean voted default=false
 }
 
-event SampleEvent {
-  --> SampleAsset asset
-  o String oldValue
-  o String newValue
+participant Candidate identified by candidate_id {
+  o String candidate_id
+  o String name
+  o String campaing_message
+  o Integer votes default=0
+  --> Election election
+}
+
+asset Election identified by election_id {
+  o String election_id
+  o String title
+  o String description
+  o ElectionStatus status default="CREATED"
+  --> ElectionManager manager
+  --> Candidate[] candidates
+}
+
+transaction CreateElection {
+  o String title
+  o String description
+}
+
+transaction StartElection {
+  o String election_id
+}
+
+transaction AddElectionCandidate {
+  o String election_id
+  o String candidate_id
+  o String candidate_name
+  o String candidate_campaing_message
+}
+
+
+transaction MakeVote {
+  o String candidate_id
 }

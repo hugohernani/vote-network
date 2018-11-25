@@ -3,7 +3,7 @@
     "composer": "^0.20.1"
   },
   "name": "vote-network",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Casting and Tallying votes made by participants (students)",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/vote-network.bna",

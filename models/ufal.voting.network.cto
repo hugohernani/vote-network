@@ -18,6 +18,11 @@
 
 namespace ufal.voting.network
 
+concept CandidateInfo {
+  o String candidate_id
+  o String name
+}
+
 enum ElectionStatus {
   o CREATED
   o STARTED
@@ -27,53 +32,59 @@ enum ElectionStatus {
 
 participant Manager identified by manager_id {
   o String manager_id
-  o String firstName
-  o String lastName
+  o String email
 }
 
-participant ElectionManager extends Manager {
-  --> Election[] elections
-}
-
-participant Voter identified by enrollment_id {
-  o String enrollment_id
-  o Boolean voted default=false
+participant Voter identified by email {
+  o String email
+  --> Election election
 }
 
 participant Candidate identified by candidate_id {
   o String candidate_id
   o String name
-  o String campaing_message
   o Integer votes default=0
   --> Election election
+}
+
+participant SecretVoter identified by voter_id {
+  o String voter_id
+  o Boolean voted default=false
+  --> Candidate candidate optional
 }
 
 asset Election identified by election_id {
   o String election_id
   o String title
-  o String description
+  o DateTime start_time
+  o DateTime end_time
   o ElectionStatus status default="CREATED"
-  --> ElectionManager manager
-  --> Candidate[] candidates
+  o String[] allowed_voter_ids
+  --> Manager manager
 }
 
 transaction CreateElection {
+  o String election_id
   o String title
-  o String description
+  o DateTime start_time
+  o DateTime end_time
+  o String[] allowed_voter_ids
+  --> Manager manager
 }
 
 transaction StartElection {
-  o String election_id
+  o String election
 }
 
-transaction AddElectionCandidate {
+transaction AddElectionMembers {
   o String election_id
-  o String candidate_id
-  o String candidate_name
-  o String candidate_campaing_message
+  o Integer[] allowed_voter_ids
+  o CandidateInfo[] candidates
+  o String[] voter_emails
 }
-
 
 transaction MakeVote {
-  o String candidate_id
+  o Integer voter_id
+  o Integer election_id
+  o Integer candidate_id
 }

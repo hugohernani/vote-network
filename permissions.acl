@@ -15,35 +15,38 @@
 /**
  * Sample access control list.
  */
+
+rule ManagerFullAccessToItsElection {
+  description: "Allow manager full access to its election assets"
+  participant(m): "ufal.voting.network.Manager"
+  operation: ALL
+  resource(e): "ufal.voting.network.Election"
+  condition: (e.manager.getIdentifier() === m.getIdentifier())
+  action: ALLOW
+}
+
+rule ManagerFullAccessToElectionRrsourcesThroughAddElectionMembers {
+  description: "Allow manager full access to its election assets through AddElectionMembers transaction"
+  participant(m): "ufal.voting.network.Manager"
+  operation: ALL
+  resource: "ufal.voting.network.**"
+  transaction(tx): "ufal.voting.network.AddElectionMembers"
+  condition: (e.manager.getIdentifier() === m.getIdentifier())
+  action: ALLOW
+}
+
 rule EverybodyCanReadEverything {
-    description: "Allow all participants read access to all resources"
-    participant: "ufal.voting.network.SampleParticipant"
-    operation: READ
-    resource: "ufal.voting.network.*"
-    action: ALLOW
-}
-
-rule EverybodyCanSubmitTransactions {
-    description: "Allow all participants to submit transactions"
-    participant: "ufal.voting.network.SampleParticipant"
-    operation: CREATE
-    resource: "ufal.voting.network.SampleTransaction"
-    action: ALLOW
-}
-
-rule OwnerHasFullAccessToTheirAssets {
-    description: "Allow all participants full access to their assets"
-    participant(p): "ufal.voting.network.SampleParticipant"
-    operation: ALL
-    resource(r): "ufal.voting.network.SampleAsset"
-    condition: (r.owner.getIdentifier() === p.getIdentifier())
-    action: ALLOW
+  description: "Allow all voting network participant read access to all resources"
+  participant: "ufal.voting.network.*"
+  operation: READ
+  resource: "ufal.voting.network.**"
+  action: ALLOW
 }
 
 rule SystemACL {
   description:  "System ACL to permit all access"
   participant: "org.hyperledger.composer.system.Participant"
-  operation: ALL
+  operation: READ
   resource: "org.hyperledger.composer.system.**"
   action: ALLOW
 }
@@ -51,7 +54,7 @@ rule SystemACL {
 rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: ALL
+    operation: READ
     resource: "**"
     action: ALLOW
 }

@@ -1,0 +1,35 @@
+version: "3"
+networks:
+  sample_network:
+    external:
+      name: sample-network
+  webgateway:
+    external:
+      name: webgateway
+  traefik:
+    external:
+      name: proxy_traefik
+services:
+  rest:
+    image: hyperledger/composer-rest-server:latest
+    volumes:
+      - ~/.composer:/home/composer/.composer
+    environment:
+    - COMPOSER_CARD=admin@vote-network
+    - COMPOSER_NAMESPACES=never
+    networks:
+      - sample_network
+      - webgateway
+      - traefik
+    ports:
+      - "4000:3000"
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure

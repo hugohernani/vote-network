@@ -69,16 +69,19 @@ transaction CreateElection {
   o DateTime start_time
   o DateTime end_time
   o String[] allowed_voter_ids
-  --> Manager manager
+  o Integer manager_id
 }
 
 transaction StartElection {
-  o String election
+  o Integer election_id
+}
+
+transaction EndElection {
+  o Integer election_id
 }
 
 transaction AddElectionMembers {
   o String election_id
-  o Integer[] allowed_voter_ids
   o CandidateInfo[] candidates
   o String[] voter_emails
 }

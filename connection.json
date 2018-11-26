@@ -1,0 +1,56 @@
+{
+    "name": "fabric-voting-network",
+    "x-type": "hlfv1",
+    "x-commitTimeout": 300,
+    "version": "1.0.0",
+    "client": {
+      "organization": "Org1",
+      "connection": {
+        "timeout": {
+          "peer": {
+            "endorser": "300",
+            "eventHub": "300",
+            "eventReg": "300"
+          },
+          "orderer": "300"
+        }
+      }
+    },
+    "channels": {
+      "mychannel": {
+        "orderers": ["orderer.example.com"],
+        "peers": {
+          "peer0.org1.example.com": {},
+          "peer1.org1.example.com": {}
+        }
+      }
+    },
+    "organizations": {
+      "Org1": {
+        "mspid": "Org1MSP",
+        "peers": ["peer0.org1.example.com", "peer1.org1.example.com"],
+        "certificateAuthorities": ["ca.example.com"]
+      }
+    },
+    "orderers": {
+      "orderer.example.com": {
+        "url": "grpc://fabric-host:7050"
+      }
+    },
+    "peers": {
+      "peer0.org1.example.com": {
+        "url": "grpc://fabric-host:8051",
+        "eventUrl": "grpc://fabric-host:8053"
+      },
+      "peer1.org1.example.com": {
+        "url": "grpc://fabric-swarm-worker-1:9051",
+        "eventUrl": "grpc://fabric-swarm-worker-1:9053"
+      }
+    },
+    "certificateAuthorities": {
+      "ca.example.com": {
+        "url": "http://fabric-host:7054",
+        "caName": "ca.example.com"
+      }
+    }
+  }

@@ -35,17 +35,17 @@ rule ManagerFullAccessToElectionRrsourcesThroughAddElectionMembers {
   action: ALLOW
 }
 
-rule EverybodyCanReadEverything {
-  description: "Allow all voting network participant read access to all resources"
-  participant: "ufal.voting.network.*"
-  operation: READ
+rule NetworkAdminCanDoAllOnProjectNamespace {
+  description: "Allow all network participant all operation access to project resources"
+  participant: "org.hyperledger.composer.system.*"
+  operation: ALL
   resource: "ufal.voting.network.**"
   action: ALLOW
 }
 
 rule SystemACL {
   description:  "System ACL to permit all access"
-  participant: "org.hyperledger.composer.system.Participant"
+  participant: "org.hyperledger.composer.system.*"
   operation: READ
   resource: "org.hyperledger.composer.system.**"
   action: ALLOW
